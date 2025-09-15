@@ -6,6 +6,7 @@ library;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:weather/components/weather_card.dart';
 import 'package:weather/services/weather_service.dart';
 import '../models/weather_model.dart';
 import 'dart:async';
@@ -110,31 +111,48 @@ String formatTime(int timestamp) {
             const SizedBox(height: 20),
 
             _weather != null
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("City: ${_weather!.city}"),
-                      const SizedBox(height: 4),
-                      Text("Temperature: ${_weather!.temperature}°C"),
-                      const SizedBox(height: 4),
-                      Text("Feels Like: ${_weather!.feelsLike}°C"),
-                      const SizedBox(height: 4),
-                      Text("Wind Speed: ${_weather!.windSpeed} m/s"),
-                      const SizedBox(height: 4),
-                      Text("Condition: ${_weather!.condition}"),
-                      const SizedBox(height: 4),
-                      Text("Description: ${_weather!.description}"),
-                      const SizedBox(height: 4),
-                      Text("Sunrise : ${formatTime(_weather!.sunrise)}"),
-                      const SizedBox(height: 4),
-                      Text("Sunset: ${formatTime(_weather!.sunset)}"),
-                      const SizedBox(height: 4),
-                      Text("Max Temp : ${_weather!.tempMax}°C"),
-                      const SizedBox(height: 4),
-                      Text("Min Temp : ${_weather!.tempMin}°C"),
-                    ],
+                ? WeatherCard(
+                    height: 120,
+                    width: 120,
+                    text: "Temperature: ${_weather!.temperature}°C",
+                    textStyle: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                    backgroundColor: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(10),
                   )
-                : const Text("Search a city to view weather..."),
+                  : const Text("Search a city to view weather..."),
+
+
+            // debug box 
+            // _weather != null
+            //     ? Column(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: [
+            //           Text("City: ${_weather!.city}"),
+            //           const SizedBox(height: 4),
+            //           Text("Temperature: ${_weather!.temperature}°C"),
+            //           const SizedBox(height: 4),
+            //           Text("Feels Like: ${_weather!.feelsLike}°C"),
+            //           const SizedBox(height: 4),
+            //           Text("Wind Speed: ${_weather!.windSpeed} m/s"),
+            //           const SizedBox(height: 4),
+            //           Text("Condition: ${_weather!.condition}"),
+            //           const SizedBox(height: 4),
+            //           Text("Description: ${_weather!.description}"),
+            //           const SizedBox(height: 4),
+            //           Text("Sunrise : ${formatTime(_weather!.sunrise)}"),
+            //           const SizedBox(height: 4),
+            //           Text("Sunset: ${formatTime(_weather!.sunset)}"),
+            //           const SizedBox(height: 4),
+            //           Text("Max Temp : ${_weather!.tempMax}°C"),
+            //           const SizedBox(height: 4),
+            //           Text("Min Temp : ${_weather!.tempMin}°C"),
+            //         ],
+            //       )
+            //     : const Text("Search a city to view weather..."),
           ],
         ),
       ),
