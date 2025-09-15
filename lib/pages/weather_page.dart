@@ -1,0 +1,143 @@
+/// Weather Page
+/// Author: Sk Samim Naser
+/// Description: A weather display page with city picker, theme toggle, and animations.
+library;
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:weather/services/weather_service.dart';
+import '../models/weather_model.dart';
+import 'dart:async';
+import 'package:intl/intl.dart';
+
+
+class WeatherPage extends StatefulWidget {
+  const WeatherPage({super.key});
+
+  @override
+  State<WeatherPage> createState() => _WeatherPageState();
+}
+
+class _WeatherPageState extends State<WeatherPage> {
+  String _selectedCity = 'Kolkata';
+  final _weatherService = WeatherService('dde189987c77b7b75e4a3c63acc0d841');
+  Weather? _weather;
+  bool _isDarkMode = false;
+  Timer? _debounce;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchWeather();
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+
+String formatTime(int timestamp) {
+  final date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+  return DateFormat.jm().format(date); // e.g., 6:45 AM
+}
+
+  Future<void> _fetchWeather() async {
+    try {
+      final weather = await _weatherService.getWeather(_selectedCity);
+      setState(() {
+        _weather = weather;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  String getWeatherAnimation(String? condition) {
+    if (condition == null) return 'assets/day.json';
+
+    switch (condition.toLowerCase()) {
+      case 'clouds':
+      case 'mist':
+      case 'smoke':
+      case 'smog':
+      case 'dust':
+      case 'fog':
+        return 'assets/cloudy.json';
+      case 'drizzle':
+        return 'assets/drizzels.json';
+      case 'shower rain':
+      case 'rain':
+        return 'assets/rain.json';
+      case 'thunderstorm':
+        return 'assets/thunderstorm.json';
+      case 'clear':
+        return 'assets/day.json';
+      case 'snowfall':
+      case 'snow':
+        return 'assets/snowfall.json';
+      default:
+        return 'assets/day.json';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        // city search field
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: CupertinoSearchTextField(
+                placeholder: "Search Location",
+                onChanged: (value) {
+                  if (_debounce?.isActive ?? false) _debounce!.cancel();
+                  _debounce = Timer(const Duration(milliseconds: 800), () {
+                    setState(() {
+                      _selectedCity = value;
+                      _weather = null;
+                    });
+                    _fetchWeather();
+                  });
+                },
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            _weather != null
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("City: ${_weather!.city}"),
+                      const SizedBox(height: 4),
+                      Text("Temperature: ${_weather!.temperature}°C"),
+                      const SizedBox(height: 4),
+                      Text("Feels Like: ${_weather!.feelsLike}°C"),
+                      const SizedBox(height: 4),
+                      Text("Wind Speed: ${_weather!.windSpeed} m/s"),
+                      const SizedBox(height: 4),
+                      Text("Condition: ${_weather!.condition}"),
+                      const SizedBox(height: 4),
+                      Text("Description: ${_weather!.description}"),
+                      const SizedBox(height: 4),
+                      Text("Sunrise : ${formatTime(_weather!.sunrise)}"),
+                      const SizedBox(height: 4),
+                      Text("Sunset: ${formatTime(_weather!.sunset)}"),
+                      const SizedBox(height: 4),
+                      Text("Max Temp : ${_weather!.tempMax}°C"),
+                      const SizedBox(height: 4),
+                      Text("Min Temp : ${_weather!.tempMin}°C"),
+                    ],
+                  )
+                : const Text("Search a city to view weather..."),
+          ],
+        ),
+      ),
+    );
+  }
+}
