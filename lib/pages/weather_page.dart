@@ -87,6 +87,7 @@ String formatTime(int timestamp) {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade200,
       body: SafeArea(
         // city search field
         child: Column(
@@ -111,45 +112,159 @@ String formatTime(int timestamp) {
             const SizedBox(height: 20),
 
             _weather != null
-                ? WeatherCard(
-                    height: 120,
-                    width: 120,
-                    text: "Temperature: ${_weather!.temperature}°C",
-                    textStyle: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                    backgroundColor: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(10),
-                  )
-                  : const Text("Search a city to view weather..."),
+            ?Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                      // temp
+                      WeatherCard(
+                        height: 150,
+                        width: 150,
+                        heading: "Temp",
+                        headingStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.grey.shade700
+                        ),
+                        text: "${_weather!.temperature}°C",
+                        textStyle: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                
+                      // wind speed 
+                      WeatherCard(
+                        height: 150,
+                        width: 150,
+                        heading: "Wind Speed",
+                        headingStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.grey.shade700
+                        ),
+                        text: "${_weather!.windSpeed} m/s",
+                        textStyle: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                  ],
+                ),
 
+                const SizedBox(height: 25),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // maximum temp
+                    WeatherCard(
+                        height: 150,
+                        width: 150,
+                        heading: "Max Temp",
+                        headingStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.grey.shade700
+                        ),
+                        text: "${_weather!.tempMax}°C",
+                        textStyle: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+
+                      // minimum temp
+                      WeatherCard(
+                        height: 150,
+                        width: 150,
+                        heading: "Min Temp",
+                        headingStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.grey.shade700
+                        ),
+                        text: "${_weather!.tempMin}°C",
+                        textStyle: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                  ],
+                ),
+
+                const SizedBox(height: 25),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // sunrise time
+                    WeatherCard(
+                        height: 150,
+                        width: 150,
+                        heading: "Sunrise",
+                        headingStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.grey.shade700
+                        ),
+                        text: formatTime(_weather!.sunrise),
+                        textStyle: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+
+                      // sunset time 
+                      WeatherCard(
+                        height: 150,
+                        width: 150,
+                        heading: "Sunset",
+                        headingStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.grey.shade700
+                        ),
+                        text: formatTime(_weather!.sunset),
+                        textStyle: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        backgroundColor: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                  ],
+                )
+              ],
+            )
+            : const Text("Search a city to view weather..."),
 
             // debug box 
             // _weather != null
             //     ? Column(
             //         crossAxisAlignment: CrossAxisAlignment.start,
-            //         children: [
-            //           Text("City: ${_weather!.city}"),
-            //           const SizedBox(height: 4),
-            //           Text("Temperature: ${_weather!.temperature}°C"),
-            //           const SizedBox(height: 4),
-            //           Text("Feels Like: ${_weather!.feelsLike}°C"),
-            //           const SizedBox(height: 4),
-            //           Text("Wind Speed: ${_weather!.windSpeed} m/s"),
-            //           const SizedBox(height: 4),
+            //         children: [               
             //           Text("Condition: ${_weather!.condition}"),
             //           const SizedBox(height: 4),
             //           Text("Description: ${_weather!.description}"),
-            //           const SizedBox(height: 4),
-            //           Text("Sunrise : ${formatTime(_weather!.sunrise)}"),
-            //           const SizedBox(height: 4),
-            //           Text("Sunset: ${formatTime(_weather!.sunset)}"),
-            //           const SizedBox(height: 4),
-            //           Text("Max Temp : ${_weather!.tempMax}°C"),
-            //           const SizedBox(height: 4),
-            //           Text("Min Temp : ${_weather!.tempMin}°C"),
+            //           const SizedBox(height: 4),         
             //         ],
             //       )
             //     : const Text("Search a city to view weather..."),

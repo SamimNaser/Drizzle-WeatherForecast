@@ -1,7 +1,7 @@
 class Weather {
   final String city;
-  final double temperature;
-  final double feelsLike;
+  final int temperature;
+  final int feelsLike;
   final double windSpeed;
   final String condition;
   final String description;
@@ -31,8 +31,8 @@ class Weather {
 
     return Weather(
       city: json['name'] as String? ?? '',
-      temperature: (main['temp'] as num?)?.toDouble() ?? 0.0,
-      feelsLike: (main['feels_like'] as num?)?.toDouble() ?? 0.0,
+      temperature: (main['temp'] as num?)?.round() ?? 0,
+      feelsLike: (main['feels_like'] as num?)?.round() ?? 0,
       windSpeed: (json['wind'] != null && json['wind']['speed'] != null)
           ? (json['wind']['speed'] as num).toDouble()
           : 0.0,
