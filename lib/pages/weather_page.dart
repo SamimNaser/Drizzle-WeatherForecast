@@ -25,7 +25,6 @@ class _WeatherPageState extends State<WeatherPage> {
   final _weatherService = WeatherService('dde189987c77b7b75e4a3c63acc0d841');
   Weather? _weather;
   bool _isDarkMode = false;
-  Timer? _debounce;
 
   @override
   void initState() {
@@ -35,15 +34,14 @@ class _WeatherPageState extends State<WeatherPage> {
 
   @override
   void dispose() {
-    _debounce?.cancel();
     super.dispose();
   }
 
 
-String formatTime(int timestamp) {
-  final date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-  return DateFormat.jm().format(date); // e.g., 6:45 AM
-}
+  String formatTime(int timestamp) {
+    final date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
+    return DateFormat.jm().format(date); // e.g., 6:45 AM
+  }
 
   Future<void> _fetchWeather() async {
     try {
@@ -96,165 +94,206 @@ String formatTime(int timestamp) {
               padding: const EdgeInsets.all(25.0),
               child: CupertinoSearchTextField(
                 placeholder: "Search Location",
-                onChanged: (value) {
-                  if (_debounce?.isActive ?? false) _debounce!.cancel();
-                  _debounce = Timer(const Duration(milliseconds: 800), () {
+                onSubmitted: (value) {
+                  if (value.trim().isNotEmpty) {
                     setState(() {
                       _selectedCity = value;
                       _weather = null;
                     });
                     _fetchWeather();
-                  });
+                  }
                 },
               ),
             ),
 
             const SizedBox(height: 20),
 
-            _weather != null
-            ?Column(
+            // location details 
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                      // temp
-                      WeatherCard(
-                        height: 150,
-                        width: 150,
-                        heading: "Temp",
-                        headingStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.grey.shade700
-                        ),
-                        text: "${_weather!.temperature}°C",
-                        textStyle: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        backgroundColor: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                
-                      // wind speed 
-                      WeatherCard(
-                        height: 150,
-                        width: 150,
-                        heading: "Wind Speed",
-                        headingStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.grey.shade700
-                        ),
-                        text: "${_weather!.windSpeed} m/s",
-                        textStyle: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        backgroundColor: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                  ],
+                const Icon(Icons.location_pin),
+                Text(
+                  _selectedCity.toString().toUpperCase(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                  ),
                 ),
-
-                const SizedBox(height: 25),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    // maximum temp
-                    WeatherCard(
-                        height: 150,
-                        width: 150,
-                        heading: "Max Temp",
-                        headingStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.grey.shade700
-                        ),
-                        text: "${_weather!.tempMax}°C",
-                        textStyle: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        backgroundColor: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-
-                      // minimum temp
-                      WeatherCard(
-                        height: 150,
-                        width: 150,
-                        heading: "Min Temp",
-                        headingStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.grey.shade700
-                        ),
-                        text: "${_weather!.tempMin}°C",
-                        textStyle: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        backgroundColor: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                  ],
-                ),
-
-                const SizedBox(height: 25),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    // sunrise time
-                    WeatherCard(
-                        height: 150,
-                        width: 150,
-                        heading: "Sunrise",
-                        headingStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.grey.shade700
-                        ),
-                        text: formatTime(_weather!.sunrise),
-                        textStyle: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        backgroundColor: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-
-                      // sunset time 
-                      WeatherCard(
-                        height: 150,
-                        width: 150,
-                        heading: "Sunset",
-                        headingStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.grey.shade700
-                        ),
-                        text: formatTime(_weather!.sunset),
-                        textStyle: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        backgroundColor: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                  ],
-                )
               ],
+            ),
+
+            // temperature details 
+            _weather != null
+            ? Center(
+              child: Text(
+                "${_weather!.temperature}°C",
+                style: const TextStyle(
+                  fontSize: 80,
+                  fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
+            : const Center(
+              child: Padding(
+                padding: EdgeInsets.only(top: 15.0),
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                ),
+              )
+            ),
+
+            const SizedBox(height: 50),
+
+            // scroll animation
+            Expanded(
+              child: _weather != null
+              ? SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                          // temp
+                          WeatherCard(
+                            height: 150,
+                            width: 150,
+                            heading: "Humidity",
+                            headingStyle: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.grey.shade700
+                            ),
+                            text: "${_weather!.humidity}%",
+                            textStyle: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                            backgroundColor: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                    
+                          // wind speed 
+                          WeatherCard(
+                            height: 150,
+                            width: 150,
+                            heading: "Wind Speed",
+                            headingStyle: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.grey.shade700
+                            ),
+                            text: "${_weather!.windSpeed} m/s",
+                            textStyle: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                            backgroundColor: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                      ],
+                    ),
+                
+                    const SizedBox(height: 25),
+                
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // maximum temp
+                        WeatherCard(
+                            height: 150,
+                            width: 150,
+                            heading: "Max Temp",
+                            headingStyle: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.grey.shade700
+                            ),
+                            text: "${_weather!.tempMax}°C",
+                            textStyle: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                            backgroundColor: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                
+                          // minimum temp
+                          WeatherCard(
+                            height: 150,
+                            width: 150,
+                            heading: "Min Temp",
+                            headingStyle: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.grey.shade700
+                            ),
+                            text: "${_weather!.tempMin}°C",
+                            textStyle: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                            backgroundColor: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                      ],
+                    ),
+                
+                    const SizedBox(height: 25),
+                
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // sunrise time
+                        WeatherCard(
+                            height: 150,
+                            width: 150,
+                            heading: "Sunrise",
+                            headingStyle: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.grey.shade700
+                            ),
+                            text: formatTime(_weather!.sunrise),
+                            textStyle: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                            backgroundColor: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                
+                          // sunset time 
+                        WeatherCard(
+                          height: 150,
+                          width: 150,
+                          heading: "Sunset",
+                          headingStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.grey.shade700
+                          ),
+                          text: formatTime(_weather!.sunset),
+                          textStyle: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                          backgroundColor: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              )
+              : const Text("Search a city to view weather..."),
             )
-            : const Text("Search a city to view weather..."),
 
             // debug box 
             // _weather != null
