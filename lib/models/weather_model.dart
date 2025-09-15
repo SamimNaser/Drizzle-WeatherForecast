@@ -9,6 +9,8 @@ class Weather {
   final int sunset;
   final double tempMin;
   final double tempMax;
+  final int humidity;
+  final int pressure;
 
   Weather({
     required this.city,
@@ -21,6 +23,8 @@ class Weather {
     required this.sunset,
     required this.tempMin,
     required this.tempMax,
+    required this.humidity,
+    required this.pressure,
   });
 
   factory Weather.fromJson(Map<String, dynamic> json, String city) {
@@ -42,6 +46,8 @@ class Weather {
       sunset: (sys['sunset'] as int?) ?? 0,
       tempMin: (main['temp_min'] as num?)?.toDouble() ?? 0.0,
       tempMax: (main['temp_max'] as num?)?.toDouble() ?? 0.0,
+      humidity: (main['humidity'] as num?)?.round() ?? 0,
+      pressure: (main['pressure'] as num?)?.round() ?? 0,
     );
   }
 }
