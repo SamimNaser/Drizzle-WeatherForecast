@@ -1,8 +1,3 @@
-/// Weather Page
-/// Author: Sk Samim Naser
-/// Description: A weather display page with city picker, theme toggle, and animations.
-library;
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -106,7 +101,7 @@ class _WeatherPageState extends State<WeatherPage> {
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
 
             // location details 
             Row(
@@ -126,13 +121,25 @@ class _WeatherPageState extends State<WeatherPage> {
             // temperature details 
             _weather != null
             ? Center(
-              child: Text(
-                "${_weather!.temperature}°C",
-                style: const TextStyle(
-                  fontSize: 80,
-                  fontWeight: FontWeight.bold,
+              child: Column(
+                children: [
+                  Text(
+                    "${_weather!.temperature}°C",
+                    style: const TextStyle(
+                      fontSize: 80,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
+
+                  Text(
+                    _weather!.condition,
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.grey.shade600
+                    ),
+                  )
+                ],
+              ),
               )
             : const Center(
               child: Padding(
@@ -268,7 +275,7 @@ class _WeatherPageState extends State<WeatherPage> {
                             borderRadius: BorderRadius.circular(15),
                           ),
                 
-                          // sunset time 
+                        // sunset time 
                         WeatherCard(
                           height: 150,
                           width: 150,
