@@ -7,10 +7,10 @@ class WeatherCard extends StatelessWidget {
   final String text;
   final TextStyle textStyle;
   final TextStyle headingStyle;
+  final Icon? icon;
   final Color? backgroundColor;
   final EdgeInsetsGeometry? padding;
   final BorderRadiusGeometry? borderRadius;
-  //final BoxBorder? border;
 
   const WeatherCard({
     super.key,
@@ -20,10 +20,10 @@ class WeatherCard extends StatelessWidget {
     required this.text,
     required this.textStyle,
     required this.headingStyle,
+    this.icon,
     this.backgroundColor,
     this.padding,
     this.borderRadius,
-    //this.border,
   });
 
   @override
@@ -35,14 +35,22 @@ class WeatherCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: borderRadius,
-        //border: border,
       ),
       alignment: Alignment.center,
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 15.0, bottom:30),
-            child: Text(heading, style: headingStyle, textAlign: TextAlign.start),
+            padding: const EdgeInsets.only(bottom: 25.0, top: 15, left: 15),
+            child: Row(
+              children: [
+                if (icon != null) icon!,
+                Text(
+                  heading,
+                  style: headingStyle,
+                  textAlign: TextAlign.start,
+                ),
+              ],
+            ),
           ),
           Text(text, style: textStyle, textAlign: TextAlign.center),
         ],
