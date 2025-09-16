@@ -6,8 +6,8 @@ class Weather {
   final String condition;
   final int sunrise;
   final int sunset;
-  final double tempMin;
-  final double tempMax;
+  final int tempMin;
+  final int tempMax;
   final int humidity;
   final int pressure;
 
@@ -41,8 +41,8 @@ class Weather {
       condition: weather['main'] as String? ?? '',
       sunrise: (sys['sunrise'] as int?) ?? 0,
       sunset: (sys['sunset'] as int?) ?? 0,
-      tempMin: (main['temp_min'] as num?)?.toDouble() ?? 0.0,
-      tempMax: (main['temp_max'] as num?)?.toDouble() ?? 0.0,
+      tempMin: (main['temp_min'] as num?)?.round() ?? 0,
+      tempMax: (main['temp_max'] as num?)?.round() ?? 0,
       humidity: (main['humidity'] as num?)?.round() ?? 0,
       pressure: (main['pressure'] as num?)?.round() ?? 0,
     );
