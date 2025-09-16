@@ -65,7 +65,7 @@ class _WeatherPageState extends State<WeatherPage> {
       case 'smog':
       case 'dust':
       case 'fog':
-        return isDay ? 'assets/DayBrokenClouds.json' : 'assets/NightCrokenClouds.json';
+        return isDay ? 'assets/DayBrokenClouds.json' : 'assets/NightBrokenClouds.json';
       case 'drizzle':
         return isDay ? 'assets/DayMist.json' : 'assets/NightMist.json';
       case 'shower rain':
@@ -79,7 +79,7 @@ class _WeatherPageState extends State<WeatherPage> {
       case 'snow':
         return isDay ? 'assets/DaySnow.json' : 'assets/NightSnow.json';
       default:
-        return isDay ? 'assets/day_clear.json' : 'assets/night_clear.json';
+        return isDay ? 'assets/DayClearSky.json' : 'assets/NightClearSky.json';
     }
   }
 
@@ -127,7 +127,6 @@ class _WeatherPageState extends State<WeatherPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Icon(Icons.location_pin, color: Colors.white ,size: 21),
-                const SizedBox(width: 5),
                 Text(
                   _selectedCity.toString().toUpperCase(),
                   style: const TextStyle(
@@ -373,12 +372,29 @@ class _WeatherPageState extends State<WeatherPage> {
                           borderRadius: BorderRadius.circular(15),
                         ),
                       ],
-                    )
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    const Text(
+                      "Designed By",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w300,
+                        color: Colors.black87
+                      ),
+                    ),
+                    const Text(
+                      "Sk Samim Naser",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w300,
+                        color: Colors.black87
+                      ),
+                    ),
                   ],
                 ),
               )
               : const Text("Search a city to view weather..."),
-            )
+            ),
           ],
         ),
       ),
