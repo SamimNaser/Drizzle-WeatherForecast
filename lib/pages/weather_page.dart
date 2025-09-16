@@ -19,7 +19,6 @@ class _WeatherPageState extends State<WeatherPage> {
   String _selectedCity = 'Kolkata';
   final _weatherService = WeatherService('dde189987c77b7b75e4a3c63acc0d841');
   Weather? _weather;
-  //bool _isDarkMode = false;
 
   @override
   void initState() {
@@ -32,7 +31,13 @@ class _WeatherPageState extends State<WeatherPage> {
     super.dispose();
   }
 
+  // check local time for night/day animation
+  bool isDayTime(Weather weather) {
+    final now = DateTime.now().toUtc().millisecondsSinceEpoch ~/ 1000;
+    return now >= weather.sunrise && now <= weather.sunset;
+  }
 
+  // format sunrise/sunset time 
   String formatTime(int timestamp) {
     final date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
     return DateFormat.jm().format(date); // e.g., 6:45 AM
@@ -50,8 +55,8 @@ class _WeatherPageState extends State<WeatherPage> {
     }
   }
 
-  String getWeatherAnimation(String? condition) {
-    if (condition == null) return 'assets/day.json';
+  String getWeatherAnimation(String? condition, bool isDay) {
+    if (condition == null) return 'assets/Daybrokenclouds.json';
 
     switch (condition.toLowerCase()) {
       case 'clouds':
@@ -60,36 +65,49 @@ class _WeatherPageState extends State<WeatherPage> {
       case 'smog':
       case 'dust':
       case 'fog':
-        return 'assets/cloudy.json';
+        return isDay ? 'assets/DayBrokenClouds.json' : 'assets/NightCrokenClouds.json';
       case 'drizzle':
-        return 'assets/drizzels.json';
+        return isDay ? 'assets/DayMist.json' : 'assets/NightMist.json';
       case 'shower rain':
       case 'rain':
-        return 'assets/rain.json';
+        return isDay ? 'assets/DayRain.json' : 'assets/NightRain.json';
       case 'thunderstorm':
-        return 'assets/thunderstorm.json';
+        return isDay ? 'assets/DayThunderstorm.json' : 'assets/NightThunderstorm.json';
       case 'clear':
-        return 'assets/day.json';
+        return isDay ? 'assets/DayClearSky.json' : 'assets/NightClearSky.json';
       case 'snowfall':
       case 'snow':
-        return 'assets/snowfall.json';
+        return isDay ? 'assets/DaySnow.json' : 'assets/NightSnow.json';
       default:
-        return 'assets/day.json';
+        return isDay ? 'assets/day_clear.json' : 'assets/night_clear.json';
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
-      body: SafeArea(
-        // city search field
-        child: Column(
-          children: [
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/background2.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          // city search field
+          child: Column(
+            children: [
             Padding(
               padding: const EdgeInsets.all(25.0),
               child: CupertinoSearchTextField(
+                backgroundColor: Colors.white24,
+                prefixIcon: const Icon(
+                  CupertinoIcons.search,
+                  color: Colors.white,
+                ),
                 placeholder: "Search Location",
+                placeholderStyle: const TextStyle(color: Colors.white54),
+                style: const TextStyle(color: Colors.white),
                 onSubmitted: (value) {
                   if (value.trim().isNotEmpty) {
                     setState(() {
@@ -108,12 +126,14 @@ class _WeatherPageState extends State<WeatherPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.location_pin),
+                const Icon(Icons.location_pin, color: Colors.white ,size: 21),
+                const SizedBox(width: 5),
                 Text(
                   _selectedCity.toString().toUpperCase(),
                   style: const TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 20,
+                    color: Colors.white
                   ),
                 ),
               ],
@@ -122,7 +142,7 @@ class _WeatherPageState extends State<WeatherPage> {
             // weather animations
             if (_weather != null)
             Lottie.asset(
-              getWeatherAnimation(_weather!.condition),
+              getWeatherAnimation(_weather!.condition, isDayTime(_weather!)),
               height: 160,
               width: 160,
               fit: BoxFit.contain,
@@ -138,6 +158,7 @@ class _WeatherPageState extends State<WeatherPage> {
                     style: const TextStyle(
                       fontSize: 70,
                       fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
 
@@ -145,7 +166,7 @@ class _WeatherPageState extends State<WeatherPage> {
                     _weather!.condition,
                     style: TextStyle(
                       fontSize: 25,
-                      color: Colors.grey.shade600
+                      color: Colors.grey.shade400
                     ),
                   )
                 ],
@@ -155,7 +176,7 @@ class _WeatherPageState extends State<WeatherPage> {
               child: Padding(
                 padding: EdgeInsets.only(top: 15.0),
                 child: CircularProgressIndicator(
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
               )
             ),
@@ -178,8 +199,8 @@ class _WeatherPageState extends State<WeatherPage> {
                             heading: "HUMIDITY",
                             headingStyle: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey.shade700
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey.shade900
                             ),
                             text: "${_weather!.humidity}%",
                             textStyle: const TextStyle(
@@ -187,8 +208,7 @@ class _WeatherPageState extends State<WeatherPage> {
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
-                            icon: Icon(Icons.water_drop, color: Colors.grey.shade400),
-                            backgroundColor: Colors.white,
+                            icon: const Icon(Icons.water_drop, color: Colors.black), 
                             borderRadius: BorderRadius.circular(15),
                           ),
                     
@@ -199,8 +219,8 @@ class _WeatherPageState extends State<WeatherPage> {
                             heading: "WIND",
                             headingStyle: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey.shade700
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey.shade900
                             ),
                             text: "${_weather!.windSpeed} m/s",
                             textStyle: const TextStyle(
@@ -208,57 +228,54 @@ class _WeatherPageState extends State<WeatherPage> {
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
-                            icon: Icon(Icons.air, color: Colors.grey.shade400),
-                            backgroundColor: Colors.white,
+                            icon: const Icon(Icons.air, color: Colors.black),
                             borderRadius: BorderRadius.circular(15),
                           ),
-                      ],
-                    ),
+                       ],
+                     ),
                 
                     const SizedBox(height: 22),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        // maximum temp
+                        // pressure
                         WeatherCard(
                             height: 150,
                             width: 150,
                             heading: "PRESSURE",
                             headingStyle: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey.shade700
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey.shade900
                             ),
-                            text: "${_weather!.pressure}hPa",
+                            text: "${_weather!.pressure} hPa",
                             textStyle: const TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
-                            icon:  Icon(Icons.compress, color: Colors.grey.shade400),
-                            backgroundColor: Colors.white,
+                            icon: const Icon(Icons.compress, color: Colors.black),
                             borderRadius: BorderRadius.circular(15),
                           ),
                 
-                          // minimum temp
+                          // feels like
                           WeatherCard(
                             height: 150,
                             width: 150,
                             heading: "FEELS LIKE",
                             headingStyle: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey.shade700
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey.shade900
                             ),
-                            text: "${_weather!.tempMin}°C",
+                            text: "${_weather!.feelsLike}°C",
                             textStyle: const TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
-                            icon: Icon(Icons.thermostat, color: Colors.grey.shade400),
-                            backgroundColor: Colors.white,
+                            icon: const Icon(Icons.thermostat, color: Colors.black),
                             borderRadius: BorderRadius.circular(15),
                           ),
                       ],
@@ -276,8 +293,8 @@ class _WeatherPageState extends State<WeatherPage> {
                             heading: "HIGH",
                             headingStyle: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey.shade700
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey.shade900
                             ),
                             text: "${_weather!.tempMax}°C",
                             textStyle: const TextStyle(
@@ -285,8 +302,7 @@ class _WeatherPageState extends State<WeatherPage> {
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
-                            icon:  Icon(Icons.arrow_upward, color: Colors.grey.shade400),
-                            backgroundColor: Colors.white,
+                            icon:  const Icon(Icons.arrow_upward, color: Colors.black),
                             borderRadius: BorderRadius.circular(15),
                           ),
                 
@@ -297,8 +313,8 @@ class _WeatherPageState extends State<WeatherPage> {
                             heading: "LOW",
                             headingStyle: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey.shade700
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey.shade900
                             ),
                             text: "${_weather!.tempMin}°C",
                             textStyle: const TextStyle(
@@ -306,8 +322,7 @@ class _WeatherPageState extends State<WeatherPage> {
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
-                            icon: Icon(Icons.arrow_downward, color: Colors.grey.shade400),
-                            backgroundColor: Colors.white,
+                            icon: const Icon(Icons.arrow_downward, color: Colors.black),
                             borderRadius: BorderRadius.circular(15),
                           ),
                       ],
@@ -325,8 +340,8 @@ class _WeatherPageState extends State<WeatherPage> {
                             heading: "SUNRISE",
                             headingStyle: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey.shade700
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey.shade900
                             ),
                             text: formatTime(_weather!.sunrise),
                             textStyle: const TextStyle(
@@ -334,8 +349,7 @@ class _WeatherPageState extends State<WeatherPage> {
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
-                            icon: Icon(Icons.wb_twilight, color: Colors.grey.shade400),
-                            backgroundColor: Colors.white,
+                            icon: const Icon(Icons.wb_twilight, color: Colors.black),
                             borderRadius: BorderRadius.circular(15),
                           ),
                 
@@ -346,8 +360,8 @@ class _WeatherPageState extends State<WeatherPage> {
                           heading: "SUNSET",
                           headingStyle: TextStyle(
                             fontSize: 14,
-                            fontWeight: FontWeight.w300,
-                            color: Colors.grey.shade700
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey.shade900
                           ),
                           text: formatTime(_weather!.sunset),
                           textStyle: const TextStyle(
@@ -355,8 +369,7 @@ class _WeatherPageState extends State<WeatherPage> {
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
-                          icon: Icon(Icons.nights_stay, color: Colors.grey.shade400),
-                          backgroundColor: Colors.white,
+                          icon: const Icon(Icons.nights_stay, color: Colors.black),
                           borderRadius: BorderRadius.circular(15),
                         ),
                       ],
@@ -369,6 +382,7 @@ class _WeatherPageState extends State<WeatherPage> {
           ],
         ),
       ),
+    ),
     );
   }
 }
