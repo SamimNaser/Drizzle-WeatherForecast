@@ -89,7 +89,7 @@ class _WeatherPageState extends State<WeatherPage> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/background2.jpg"),
+            image: AssetImage("assets/image.png"),
             fit: BoxFit.cover,
           ),
         ),
@@ -393,7 +393,7 @@ class _WeatherPageState extends State<WeatherPage> {
                   ],
                 ),
               )
-              : const Text("Search a city to view weather..."),
+              : const Text(""),
             ),
           ],
         ),
