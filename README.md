@@ -1,16 +1,39 @@
-# weather
+# 🌧️ Drizzle
 
-A new Flutter project.
+Drizzle is a simple and elegant weather app built with **Flutter**.  
+It provides real-time weather updates based on your current location or any city you search for.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## ✨ Features
+- 🌍 **Location-based weather** – auto-detects your current city
+- 🔍 **Search by city name**
+- 🌦️ **Dynamic weather animations** with Lottie (day & night modes)
+- 🌡️ Shows **temperature, feels like, humidity, pressure, and wind speed**
+- 🌅 Displays **sunrise and sunset times**
+- 📊 Shows **highs and lows of the day**
+- 🖼️ **Clean, modern UI** inspired by glassmorphism
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 📦 Download APK
+👉 [Download Drizzle APK](https://github.com/your-username/drizzle/releases/latest/download/app-release.apk)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## 👨‍💻 Author
+**Sk Samim Naser**  
+🌐 [GitHub Profile](https://github.com/SamimNaser)  
+
+---
+
+## 🛠️ Built With
+- [Flutter](https://flutter.dev/)
+- [Dart](https://dart.dev/)
+- [OpenWeather API](https://openweathermap.org/api)
+- [Lottie](https://lottiefiles.com/)
+
+---
+
+## 📄 License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
