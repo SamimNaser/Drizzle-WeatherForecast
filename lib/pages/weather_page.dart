@@ -159,6 +159,7 @@ class _WeatherPageState extends State<WeatherPage> {
               child: Row(
                 children: [
 
+                  // building drawer 
                   Builder(
                    builder: (context) => IconButton(
                      onPressed: () {
@@ -255,7 +256,7 @@ class _WeatherPageState extends State<WeatherPage> {
               )
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 15),
 
             // scroll animation
             Expanded(
