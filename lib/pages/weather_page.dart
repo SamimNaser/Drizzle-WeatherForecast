@@ -149,7 +149,7 @@ class _WeatherPageState extends State<WeatherPage> {
             children: [
               // Always visible search bar
               Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 15),
 
                 child: Row(
                   children: [
@@ -199,8 +199,8 @@ class _WeatherPageState extends State<WeatherPage> {
                           'Please enter your API key in Settings.',
                           style: TextStyle(
                             color: Colors.white54,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
                           textAlign: TextAlign.center,
                         ),
