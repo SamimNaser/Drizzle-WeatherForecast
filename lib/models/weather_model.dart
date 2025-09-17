@@ -25,14 +25,14 @@ class Weather {
     required this.pressure,
   });
 
-  factory Weather.fromJson(Map<String, dynamic> json, String city) {
+  factory Weather.fromJson(Map<String, dynamic> json, [String? city]) {
     final main = json['main'] as Map<String, dynamic>? ?? {};
     final weatherList = json['weather'] as List<dynamic>? ?? [];
     final weather = weatherList.isNotEmpty ? weatherList[0] as Map<String, dynamic> : {};
     final sys = json['sys'] as Map<String, dynamic>? ?? {};
 
     return Weather(
-      city: json['name'] as String? ?? '',
+      city: city ?? (json['name'] as String? ?? ''),
       temperature: (main['temp'] as num?)?.round() ?? 0,
       feelsLike: (main['feels_like'] as num?)?.round() ?? 0,
       windSpeed: (json['wind'] != null && json['wind']['speed'] != null)

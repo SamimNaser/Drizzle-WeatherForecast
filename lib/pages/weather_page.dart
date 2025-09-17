@@ -6,6 +6,7 @@ import 'package:weather/services/weather_service.dart';
 import '../models/weather_model.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import 'package:geolocator/geolocator.dart';
 
 
 class WeatherPage extends StatefulWidget {
@@ -16,19 +17,70 @@ class WeatherPage extends StatefulWidget {
 }
 
 class _WeatherPageState extends State<WeatherPage> {
-  String _selectedCity = 'Kolkata';
+  String _selectedCity = '';
   final _weatherService = WeatherService('dde189987c77b7b75e4a3c63acc0d841');
   Weather? _weather;
 
   @override
   void initState() {
     super.initState();
-    _fetchWeather();
+    _fetchWeatherByLocation();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    } 
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition();
+  }
+
+  Future<void> _fetchWeatherByLocation() async {
+    try {
+      final position = await _determinePosition();
+      final weather = await _weatherService.getWeatherByLocation(position.latitude, position.longitude);
+      setState(() {
+        _weather = weather;
+        _selectedCity = weather.city;
+      });
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+    }
   }
 
   // check local time for night/day animation
@@ -388,7 +440,7 @@ class _WeatherPageState extends State<WeatherPage> {
                       style: TextStyle(
                         fontWeight: FontWeight.w300,
                         color: Colors.black87
-                      ),
+                      ), 
                     ),
                   ],
                 ),

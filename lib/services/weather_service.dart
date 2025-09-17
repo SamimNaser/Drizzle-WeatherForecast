@@ -24,4 +24,19 @@ class WeatherService {
       throw Exception('Failed to load weather: ${response.reasonPhrase}');
     }
   }
+  // Get weather using Current Weather API by latitude and longitude
+  Future<Weather> getWeatherByLocation(double lat, double lon) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl?lat=$lat&lon=$lon&units=metric&appid=$apiKey'),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return Weather.fromJson(data, null);
+    } else if (response.statusCode == 404) {
+      throw Exception('Location not found');
+    } else {
+      throw Exception('Failed to load weather: ${response.reasonPhrase}');
+    }
+  }
 }
