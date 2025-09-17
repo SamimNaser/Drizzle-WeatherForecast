@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:weather/components/my_drawer.dart';
 import 'package:weather/components/weather_card.dart';
 import 'package:weather/services/weather_service.dart';
 import '../models/weather_model.dart';
@@ -107,6 +108,7 @@ class _WeatherPageState extends State<WeatherPage> {
     }
   }
 
+  // get animation from condition 
   String getWeatherAnimation(String? condition, bool isDay) {
     if (condition == null) return 'assets/Daybrokenclouds.json';
 
@@ -138,6 +140,8 @@ class _WeatherPageState extends State<WeatherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const MyDrawer(),
+
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -150,29 +154,48 @@ class _WeatherPageState extends State<WeatherPage> {
           child: Column(
             children: [
             Padding(
-              padding: const EdgeInsets.all(25.0),
-              child: CupertinoSearchTextField(
-                backgroundColor: Colors.white24,
-                prefixIcon: const Icon(
-                  CupertinoIcons.search,
-                  color: Colors.white,
-                ),
-                placeholder: "Search Location",
-                placeholderStyle: const TextStyle(color: Colors.white54),
-                style: const TextStyle(color: Colors.white),
-                onSubmitted: (value) {
-                  if (value.trim().isNotEmpty) {
-                    setState(() {
-                      _selectedCity = value;
-                      _weather = null;
-                    });
-                    _fetchWeather();
-                  }
-                },
+              padding: const EdgeInsets.only(left: 10, right: 15, top: 5),
+
+              child: Row(
+                children: [
+
+                  Builder(
+                   builder: (context) => IconButton(
+                     onPressed: () {
+                       Scaffold.of(context).openDrawer(); // Opens MyDrawer
+                     },
+                     icon: const Icon(Icons.menu),
+                     iconSize: 38,
+                     color: Colors.white54,
+                   ),
+                 ),
+
+                  Expanded(
+                    child: CupertinoSearchTextField(
+                      backgroundColor: Colors.white24,
+                      prefixIcon: const Icon(
+                        CupertinoIcons.search,
+                        color: Colors.white,
+                      ),
+                      placeholder: "Search Location",
+                      placeholderStyle: const TextStyle(color: Colors.white54),
+                      style: const TextStyle(color: Colors.white),
+                      onSubmitted: (value) {
+                        if (value.trim().isNotEmpty) {
+                          setState(() {
+                            _selectedCity = value;
+                            _weather = null;
+                          });
+                          _fetchWeather();
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 25),
 
             // location details 
             Row(
@@ -424,23 +447,6 @@ class _WeatherPageState extends State<WeatherPage> {
                           borderRadius: BorderRadius.circular(15),
                         ),
                       ],
-                    ),
-
-                    const SizedBox(height: 15),
-
-                    const Text(
-                      "Designed By",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        color: Colors.black87
-                      ),
-                    ),
-                    const Text(
-                      "Sk Samim Naser",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        color: Colors.black87
-                      ), 
                     ),
                   ],
                 ),
