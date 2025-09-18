@@ -16,6 +16,18 @@ It provides real-time weather updates based on your current location or any city
 
 ---
 
+## ⚙️ Setup Instructions
+To use the app, you’ll need your own **OpenWeather API key**:
+
+1. Create a free account at [OpenWeather](https://openweathermap.org/).
+2. Generate an API key from the **API keys** section of your dashboard.
+3. Install and open the app.
+4. Go to the **⚙️ Settings page** inside the app.
+5. Paste your API key and save it.
+6. Once saved, the app will start fetching live weather data.
+
+---
+
 ## 📦 Download APK
 👉 [Download Drizzle APK](https://github.com/your-username/drizzle/releases/latest/download/app-release.apk)
 
@@ -32,7 +44,7 @@ It provides real-time weather updates based on your current location or any city
 - [Dart](https://dart.dev/)
 - [OpenWeather API](https://openweathermap.org/api)
 - [Lottie](https://lottiefiles.com/)
-
+  
 ---
 
 ## 📄 License
