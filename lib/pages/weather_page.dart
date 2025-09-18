@@ -177,13 +177,16 @@ class _WeatherPageState extends State<WeatherPage> {
                     ),
 
                     IconButton(
-                      onPressed: () {
-                        Navigator.push(
+                      onPressed: () async {
+                        final updated = await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const SettingsPage(),
                           ),
                         );
+                        if (updated == true) {
+                          _loadApiKey(); // reload API key and weather
+                        }
                       },
                       icon: const Icon(Icons.settings, color: Colors.white , size: 28),
                     ),

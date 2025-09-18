@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,7 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('apiKey', _controller.text.trim());
     if (!mounted) return;
-    Navigator.pop(context); // back to WeatherPage
+    Navigator.pop(context, true); // return true to indicate key updated
   }
 
   @override
@@ -49,19 +48,14 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Column(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.arrow_back , color: Colors.white, size: 30)
-                      ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.arrow_back , color: Colors.white, size: 30)
                     ),
-
-                    const SizedBox(width: 72),
-
                     const Text(
                       "SETTINGS",
                       style: TextStyle(
@@ -69,7 +63,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         fontWeight: FontWeight.bold,
                         fontSize: 25,
                       ),
-                    )
+                    ),
+                    const SizedBox(width: 48),
                   ],
                 ),
 
@@ -99,6 +94,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                 ),
+                
                 const SizedBox(height: 20),
 
                 ClipRRect(
